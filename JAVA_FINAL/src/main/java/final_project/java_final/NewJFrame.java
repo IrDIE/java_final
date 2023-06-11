@@ -6,11 +6,14 @@ package final_project.java_final;
 
 import final_project.java_final.DB_providers.CreatorSQL;
 import final_project.java_final.DB_providers.DisplayerDB;
+import final_project.java_final.DB_providers.GetIdSQL;
 import final_project.java_final.DB_providers.InserterSQL;
+import final_project.java_final.DB_providers.RefractorSQL;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javax.management.Query.value;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -23,15 +26,45 @@ public class NewJFrame extends javax.swing.JFrame {
     
     
     CreatorSQL creatorDB = new CreatorSQL();
-    String displayAllRecordsString = "select * from java.all_records";
-    InserterSQL inserter = new InserterSQL();
     
+    RefractorSQL refractorSQL = new RefractorSQL();
+    
+    
+    String displayAllRecordsString = "select * from java.all_records";
+    String StrindRecord2Edit = "SELECT \n" +
+"ar.client_id,record_id , client_name, client_phone, description,\n" +
+"status, accepter_id, maker_id, work_result, bill\n" +
+"FROM \n" +
+"java.all_records ar LEFT JOIN\n" +
+"java.clients c ON c.client_id = ar.client_id\n" +
+"WHERE record_id = ";
+    InserterSQL inserter = new InserterSQL();
+    GetIdSQL getterID = new GetIdSQL();
+    DisplayerDB displayer;
     
     
     public NewJFrame() {
-        initComponents();
-        this.allRecordsTable.setSize(700, 400);
-        this.AllRecordsDialog.setSize(800, 500);
+        try {
+            initComponents();
+            this.displayer = new DisplayerDB();
+            this.allRecordsTable.setSize(700, 400);
+            this.showSelectedRecordTable.setSize(650, 300);
+            this.showSelectedRecordTable.setVisible(false);
+            this.AllRecordsDialog.setSize(800, 500);
+            this.EditRecordDoneDialog.setSize(1000, 800);
+            
+//            this.setAccepterBottom.setVisible(false);
+//            this.workAccepterBottom.setVisible(false);
+//            this.setMakerBottom.setVisible(false);
+//            this.workMakerBottom.setVisible(false);
+//            this.CloseRecordButtom.setVisible(false);
+    
+            
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -58,7 +91,12 @@ public class NewJFrame extends javax.swing.JFrame {
         workAccepterBottom = new javax.swing.JButton();
         workMakerBottom = new javax.swing.JButton();
         RefreshButtom = new javax.swing.JButton();
-        CloseRecordButton = new javax.swing.JButton();
+        CloseRecordButtom = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        showSelectedRecordTable = new javax.swing.JTable();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        ShowDiagnosisResultTable = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         CreateDBBottom = new javax.swing.JButton();
         AddRecordButton = new javax.swing.JButton();
@@ -175,8 +213,18 @@ public class NewJFrame extends javax.swing.JFrame {
         });
 
         setMakerBottom.setText("set maker");
+        setMakerBottom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setMakerBottomActionPerformed(evt);
+            }
+        });
 
         workAccepterBottom.setText("work");
+        workAccepterBottom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                workAccepterBottomActionPerformed(evt);
+            }
+        });
 
         workMakerBottom.setText("work");
         workMakerBottom.addActionListener(new java.awt.event.ActionListener() {
@@ -186,52 +234,107 @@ public class NewJFrame extends javax.swing.JFrame {
         });
 
         RefreshButtom.setText("refresh");
+        RefreshButtom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RefreshButtomActionPerformed(evt);
+            }
+        });
 
-        CloseRecordButton.setText("Close Record");
+        CloseRecordButtom.setText("Close Record as done");
+        CloseRecordButtom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CloseRecordButtomActionPerformed(evt);
+            }
+        });
+
+        showSelectedRecordTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(showSelectedRecordTable);
+
+        ShowDiagnosisResultTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane4.setViewportView(ShowDiagnosisResultTable);
+
+        jLabel2.setText("Found  Damages :");
 
         javax.swing.GroupLayout EditRecordDoneDialogLayout = new javax.swing.GroupLayout(EditRecordDoneDialog.getContentPane());
         EditRecordDoneDialog.getContentPane().setLayout(EditRecordDoneDialogLayout);
         EditRecordDoneDialogLayout.setHorizontalGroup(
             EditRecordDoneDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(EditRecordDoneDialogLayout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, EditRecordDoneDialogLayout.createSequentialGroup()
-                .addContainerGap(469, Short.MAX_VALUE)
-                .addGroup(EditRecordDoneDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(RefreshButtom, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(EditRecordDoneDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(EditRecordDoneDialogLayout.createSequentialGroup()
-                        .addComponent(setMakerBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(15, 15, 15)
                         .addGroup(EditRecordDoneDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(workMakerBottom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(CloseRecordButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 866, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(EditRecordDoneDialogLayout.createSequentialGroup()
-                        .addComponent(setAccepterBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(workAccepterBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(36, 36, 36))
+                        .addGap(22, 22, 22)
+                        .addGroup(EditRecordDoneDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(EditRecordDoneDialogLayout.createSequentialGroup()
+                                .addComponent(setAccepterBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(workAccepterBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(EditRecordDoneDialogLayout.createSequentialGroup()
+                                .addGroup(EditRecordDoneDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(RefreshButtom, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(setMakerBottom, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(EditRecordDoneDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(workMakerBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(EditRecordDoneDialogLayout.createSequentialGroup()
+                                        .addComponent(CloseRecordButtom)
+                                        .addGap(117, 117, 117)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                .addContainerGap(26, Short.MAX_VALUE))
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         EditRecordDoneDialogLayout.setVerticalGroup(
             EditRecordDoneDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(EditRecordDoneDialogLayout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15)
-                .addGroup(EditRecordDoneDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(workAccepterBottom, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
-                    .addComponent(setAccepterBottom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(65, 65, 65)
-                .addGroup(EditRecordDoneDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(EditRecordDoneDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(setAccepterBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(workAccepterBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(EditRecordDoneDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(EditRecordDoneDialogLayout.createSequentialGroup()
-                        .addComponent(workMakerBottom)
-                        .addGap(18, 18, 18)
-                        .addComponent(CloseRecordButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(setMakerBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(115, 115, 115)
-                .addComponent(RefreshButtom, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(40, Short.MAX_VALUE))
+                        .addGap(14, 14, 14)
+                        .addGroup(EditRecordDoneDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(EditRecordDoneDialogLayout.createSequentialGroup()
+                                .addComponent(setMakerBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(EditRecordDoneDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(RefreshButtom)
+                                    .addComponent(CloseRecordButtom)))
+                            .addComponent(workMakerBottom)))
+                    .addGroup(EditRecordDoneDialogLayout.createSequentialGroup()
+                        .addGap(78, 78, 78)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -321,34 +424,15 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_AddRecordButtonActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        try {
-            // TODO add your handling code here:
+      
             
-            
-            
-            DisplayerDB displayer = new DisplayerDB(this.displayAllRecordsString);
-            
-            DefaultTableModel dt = new DefaultTableModel(displayer.getData(), displayer.getColNames());
+            DefaultTableModel dt = new DefaultTableModel(displayer.getData(this.displayAllRecordsString), displayer.getColNames());
             
             this.allRecordsTable.setModel(dt );
             
-            
-            JTable g = new JTable(displayer.getData(), displayer.getColNames())
-            {
-                public Class getColumnClass(int column){
-                    for(int row = 0;row<getRowCount();row++){
-                        Object o = getValueAt(row, column);
-                        if(o!=null){
-                            return o.getClass();
-                        }}
-                    return Object.class;         }
-            };
-        } catch (SQLException ex) {     Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);  
-        }
-        
-        
-        this.AllRecordsDialog.setVisible(true);
-        this.allRecordsTable.setVisible(true);
+
+            this.AllRecordsDialog.setVisible(true);
+            this.allRecordsTable.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void AddRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddRecordActionPerformed
@@ -363,24 +447,186 @@ public class NewJFrame extends javax.swing.JFrame {
     private void EditRecordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditRecordButtonActionPerformed
         // TODO add your handling code here:
         
-        
+   
         int row_number_selected = this.allRecordsTable.getSelectedRow();
         int selected_record_id = (int) this.allRecordsTable.getValueAt(this.allRecordsTable.getSelectedRow(), 0);
-        System.out.println("selected_record_id = " + selected_record_id);
         
+     
+        DefaultTableModel dt2 = new DefaultTableModel(displayer.getData(this.StrindRecord2Edit + 
+                                  Integer.toString(selected_record_id)), displayer.getColNames());
+        /// выводим всю инфу по заявке
+        this.showSelectedRecordTable.setModel(dt2 );
+            
+        // получаем статус этой заявки
+        String status = this.showSelectedRecordTable.getValueAt(0, 5).toString();
+        System.out.println("status = " + status);
+        switch (status) {
+            case "new":
+                this.setAccepterBottom.setVisible(true);
+            this.workAccepterBottom.setVisible(true);
+                break;
+                
+            case "diagnosis":
+                this.setMakerBottom.setVisible(true);
+            this.workMakerBottom.setVisible(true);
+                
+                break;
+            case "done":
+                  this.CloseRecordButtom.setVisible(true);
+                break;
+            default:
+                throw new AssertionError();
+        }
         
+            
+            this.EditRecordDoneDialog.setVisible(true);
+            this.showSelectedRecordTable.setVisible(true);
+            
+            
         
+   
         
         
     }//GEN-LAST:event_EditRecordButtonActionPerformed
 
     private void setAccepterBottomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setAccepterBottomActionPerformed
         // TODO add your handling code here:
+        
+        
+        int record_id  = (int) this.showSelectedRecordTable.getValueAt(0, 1);
+        this.refractorSQL.SetAccepter(record_id);
+        
+       
+        
     }//GEN-LAST:event_setAccepterBottomActionPerformed
 
     private void workMakerBottomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_workMakerBottomActionPerformed
         // TODO add your handling code here:
+        
+       try{
+              
+             int record_id  = (int) this.showSelectedRecordTable.getValueAt(0, 1);
+         
+            if(this.showSelectedRecordTable.getValueAt(0, 7) == null ){
+              throw new Exception("") ;
+            }
+
+            this.refractorSQL.SetStatusAfterMaker(record_id);
+           /// ОБЯЗАТЕЛЬНО ПРОВЕРИТЬ ЧТО НАЗНАЧЕН MAKER
+        
+          }
+        catch(Exception e)
+        { JOptionPane.showMessageDialog (null, "Вы не выбрали Maker", "Oшибка", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_workMakerBottomActionPerformed
+
+    private void setMakerBottomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setMakerBottomActionPerformed
+        // TODO add your handling code here:
+        int record_id  = (int) this.showSelectedRecordTable.getValueAt(0, 1);
+        
+        int nDamages = this.ShowDiagnosisResultTable.getRowCount();
+        System.out.println("nDamages = " + nDamages);
+        for(int i = 0; i < nDamages; i++){
+                  String damage = (String) this.ShowDiagnosisResultTable.getValueAt(i, 2);
+                   this.refractorSQL.SetMaker(record_id, damage);
+        }
+        
+  
+        
+        
+    }//GEN-LAST:event_setMakerBottomActionPerformed
+
+    private void workAccepterBottomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_workAccepterBottomActionPerformed
+        // TODO add your handling code here:
+        int record_id  = (int) this.showSelectedRecordTable.getValueAt(0, 1);
+    
+    
+        /// ОБЯЗАТЕЛЬНО ПРОВЕРИТЬ ЧТО НАЗНАЧЕН ACCEPTER
+        try{
+        if(this.showSelectedRecordTable.getValueAt(0, 6) == null ){
+          throw new Exception("") ;
+        }
+        
+        
+       refractorSQL.addDamage2Record(record_id);
+        
+        System.out.println("Integer.toString(record_id) = " + Integer.toString(record_id));
+        DefaultTableModel dt = new DefaultTableModel(displayer.getData("select * from java.damages2records where record_id = " + Integer.toString(record_id)), displayer.getColNames());
+        /// выводим всю инфу по заявке
+        this.ShowDiagnosisResultTable.setModel(dt );
+        
+        this.ShowDiagnosisResultTable.setVisible(true);
+        this.refractorSQL.SetStatusAfterAccepter(record_id);}
+        
+        catch(Exception e)
+        {
+            JOptionPane.showMessageDialog (null, "Вы не выбрали ACCEPTER", "Oшибка", JOptionPane.ERROR_MESSAGE);
+        }
+         
+    }//GEN-LAST:event_workAccepterBottomActionPerformed
+
+    private void CloseRecordButtomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CloseRecordButtomActionPerformed
+        // TODO add your handling code here:
+        
+        
+        this.EditRecordDoneDialog.dispose();
+        
+        
+        
+        
+        
+    }//GEN-LAST:event_CloseRecordButtomActionPerformed
+
+    private void RefreshButtomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshButtomActionPerformed
+        int record_id  =  (int) this.allRecordsTable.getValueAt(this.allRecordsTable.getSelectedRow(), 0);
+    
+           System.out.println("record_id = "  + record_id);
+
+         DefaultTableModel dt2 = new DefaultTableModel(displayer.getData(this.StrindRecord2Edit + 
+                                  Integer.toString(record_id)), displayer.getColNames());
+        
+        this.showSelectedRecordTable.setModel(dt2 );
+                  System.out.println("record_id = " + record_id);
+        DefaultTableModel dt = new DefaultTableModel(displayer.getData("select * from java.damages2records"
+                    + " where record_id = " + Integer.toString(record_id)   ), displayer.getColNames());
+        this.ShowDiagnosisResultTable.setModel(dt );
+         this.ShowDiagnosisResultTable.setVisible(true);
+         
+        String status = this.showSelectedRecordTable.getValueAt(0, 5).toString();
+
+    
+//        switch (status) {
+//            case "new":
+//                this.setAccepterBottom.setVisible(true);
+//                  this.workAccepterBottom.setVisible(true);
+//                  
+//                  this.setMakerBottom.setVisible(false);
+//                 this.workMakerBottom.setVisible(false);
+//                  this.CloseRecordButtom.setVisible(false);
+//                break;
+//                
+//            case "diagnosis":
+//                
+//                  this.setAccepterBottom.setVisible(false);
+//                  this.workAccepterBottom.setVisible(false);
+//                  this.CloseRecordButtom.setVisible(false);
+//                this.setMakerBottom.setVisible(true);
+//                 this.workMakerBottom.setVisible(true);
+//                
+//                break;
+//            case "done":
+//                this.setAccepterBottom.setVisible(false);
+//                  this.workAccepterBottom.setVisible(false);
+//                this.setMakerBottom.setVisible(false);
+//                 this.workMakerBottom.setVisible(false);
+//                  this.CloseRecordButtom.setVisible(true);
+//                break;
+//            default:
+//                throw new AssertionError();
+//        }
+        
+        
+    }//GEN-LAST:event_RefreshButtomActionPerformed
 
     /**
      * @param args the command line arguments
@@ -421,22 +667,27 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JButton AddRecord;
     private javax.swing.JButton AddRecordButton;
     private javax.swing.JDialog AllRecordsDialog;
-    private javax.swing.JButton CloseRecordButton;
+    private javax.swing.JButton CloseRecordButtom;
     private javax.swing.JButton CreateDBBottom;
     private javax.swing.JButton EditRecordButton;
     private javax.swing.JDialog EditRecordDoneDialog;
     private javax.swing.JButton RefreshButtom;
+    private javax.swing.JTable ShowDiagnosisResultTable;
     private javax.swing.JTable allRecordsTable;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JDialog newRecordDialog;
     private javax.swing.JTable newRecordTable;
     private javax.swing.JButton setAccepterBottom;
     private javax.swing.JButton setMakerBottom;
+    private javax.swing.JTable showSelectedRecordTable;
     private javax.swing.JButton workAccepterBottom;
     private javax.swing.JButton workMakerBottom;
     // End of variables declaration//GEN-END:variables

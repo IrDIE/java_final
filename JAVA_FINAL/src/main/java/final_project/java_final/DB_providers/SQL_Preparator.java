@@ -62,15 +62,18 @@ public class SQL_Preparator {
                 
             case "records":
                 
-                int client_id_getter = new GetIdSQL("client_id","clients", "client_name", client_name ).getID();
+                int client_id_getter = new GetIdSQL().getID("client_id","clients", "client_name", client_name );
        
               query_prepared.setInt(1,  client_id_getter); 
-                query_prepared.setString(2, "new"); //
-                query_prepared.setString(3, record_description); //
-                 
-                query_prepared.setNull(4, Types.NULL); //
+                query_prepared.setString(2, "new"); //status
+                query_prepared.setString(3, record_description); //description
+     
+                query_prepared.setNull(4, Types.NULL); //accepter_id
+       
                 query_prepared.setBoolean(5,false ); //
-                query_prepared.setNull(6,Types.NULL  ); //                      
+                query_prepared.setNull(6,Types.NULL  ); // 
+                query_prepared.setNull(7,Types.NULL  ); // 
+                query_prepared.setFloat(8,0 ); // 
                 query_prepared.addBatch(); 
                 
                 break;

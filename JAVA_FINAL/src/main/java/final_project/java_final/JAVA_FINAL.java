@@ -23,8 +23,8 @@ public class JAVA_FINAL {
         try {
             System.out.println("Hello World!");
             
-            DisplayerDB dd = new DisplayerDB("select client_id from java.clients where client_name = 'david ' ");
-            ArrayList res =  new ArrayList( dd.getData());
+            DisplayerDB dd = new DisplayerDB();
+            ArrayList res =  new ArrayList( dd.getData("select client_id from java.clients where client_name = 'david ' "));
             // System.out.println( "res = "+ res.get(""));
         } catch (SQLException ex) {
             Logger.getLogger(JAVA_FINAL.class.getName()).log(Level.SEVERE, null, ex);

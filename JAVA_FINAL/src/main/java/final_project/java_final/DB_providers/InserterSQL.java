@@ -20,7 +20,7 @@ public class InserterSQL extends ConnectionRunners {
 
     String insert_SQL_clients = "INSERT INTO java.clients (client_name, client_phone, car_number) VALUES (?, ?, ?);";
     String insert_SQL_workers = "INSERT INTO java.workers (WORKER_NAME) VALUES ( ?);";
-    String insert_SQL_records = "INSERT INTO java.all_records (client_id, status,description,accepter_id,client_decision ,maker_id) VALUES (?, ?, ?, ?, ?, ?);";
+    String insert_SQL_records = "INSERT INTO java.all_records (client_id, status,description,accepter_id, client_decision ,maker_id, work_result, bill) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
     String insert_SQL_details = "INSERT INTO java.details (detail_price, detail_name VALUES (?, ?);";
  
     String target_SQL_insert = "";

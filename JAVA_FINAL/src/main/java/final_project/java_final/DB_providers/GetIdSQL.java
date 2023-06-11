@@ -17,12 +17,8 @@ public class GetIdSQL extends ConnectionRunners{
     String where;
     String condition;
     Integer out_id = 0;
-    public GetIdSQL(String select_what, String select_from, String where,String condition ){
-        this.select_what = select_what;
-        this.condition = condition;
-        this.select_from = select_from;
-        this.where = where;
-        
+    public GetIdSQL(){
+
         
         
     
@@ -30,8 +26,9 @@ public class GetIdSQL extends ConnectionRunners{
     
     
     
-    public int getID(){
+    public int getID(String select_what, String select_from, String where,String condition ){
         try {
+            
             Connection engine = DriverManager.getConnection(this.url, this.user, this.password);
             
             PreparedStatement stmt = engine.prepareStatement("select " +select_what + " from java." +select_from + " where " + where + " ='" +condition + "';");
@@ -48,5 +45,9 @@ public class GetIdSQL extends ConnectionRunners{
       return this.out_id;
     
     }
+    
+   
+    
+    
     
 }
