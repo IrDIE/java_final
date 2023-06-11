@@ -157,6 +157,32 @@ public class RefractorSQL extends ConnectionRunners {
     
     }
     
+    public void setBillAfterWork(int id_2_refractor){
     
+        
+        try {
+            String update = String.format( "UPDATE java.all_records \n" +
+                        "SET bill  = (SELECT sum(detail_price) FROM java.damages2records dr \n" +
+                        "WHERE record_id = %d ) WHERE record_id = %d",id_2_refractor, id_2_refractor );
+            System.out.println(update);
+            
+            Connection engine = DriverManager.getConnection(this.url, this.user, this.password);
+            Statement stmt = engine.createStatement();
+            
+            stmt.execute( update);
+            engine.close();
+            
+            
+//       String SQL_update = "";
+//            Connection engine = DriverManager.getConnection(this.url, this.user, this.password);
+//            Statement stmt = engine.createStatement();
+//            
+//            stmt.execute(  SQL_update+ Integer.toString(id_2_refractor));
+//            engine.close();  
+        } catch (SQLException ex) {
+            Logger.getLogger(RefractorSQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+    }
     
 }

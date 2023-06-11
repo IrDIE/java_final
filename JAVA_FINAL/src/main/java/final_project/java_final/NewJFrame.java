@@ -3,16 +3,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package final_project.java_final;
-
+import static com.google.common.io.Files.getFileExtension;
 import final_project.java_final.DB_providers.CreatorSQL;
 import final_project.java_final.DB_providers.DisplayerDB;
+import final_project.java_final.DB_providers.FileWriter;
 import final_project.java_final.DB_providers.GetIdSQL;
 import final_project.java_final.DB_providers.InserterSQL;
 import final_project.java_final.DB_providers.RefractorSQL;
+import java.awt.event.WindowEvent;
+import java.io.File;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javax.management.Query.value;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -41,6 +45,7 @@ public class NewJFrame extends javax.swing.JFrame {
     InserterSQL inserter = new InserterSQL();
     GetIdSQL getterID = new GetIdSQL();
     DisplayerDB displayer;
+    FileWriter writer = new FileWriter();
     
     
     public NewJFrame() {
@@ -52,6 +57,7 @@ public class NewJFrame extends javax.swing.JFrame {
             this.showSelectedRecordTable.setVisible(false);
             this.AllRecordsDialog.setSize(800, 500);
             this.EditRecordDoneDialog.setSize(1000, 800);
+            this.BillDialog.setSize(900, 800);
             
 //            this.setAccepterBottom.setVisible(false);
 //            this.workAccepterBottom.setVisible(false);
@@ -97,6 +103,11 @@ public class NewJFrame extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         ShowDiagnosisResultTable = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
+        SeeBillButton = new javax.swing.JButton();
+        BillDialog = new javax.swing.JDialog();
+        ExportBillButton = new javax.swing.JButton();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        ExportTable = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         CreateDBBottom = new javax.swing.JButton();
         AddRecordButton = new javax.swing.JButton();
@@ -140,23 +151,23 @@ public class NewJFrame extends javax.swing.JFrame {
         newRecordDialogLayout.setHorizontalGroup(
             newRecordDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(newRecordDialogLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 521, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
-                .addComponent(AddRecord, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addGroup(newRecordDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(newRecordDialogLayout.createSequentialGroup()
+                        .addGap(81, 81, 81)
+                        .addComponent(AddRecord, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(newRecordDialogLayout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 657, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(86, Short.MAX_VALUE))
         );
         newRecordDialogLayout.setVerticalGroup(
             newRecordDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(newRecordDialogLayout.createSequentialGroup()
-                .addGroup(newRecordDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(newRecordDialogLayout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(AddRecord, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(newRecordDialogLayout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(338, Short.MAX_VALUE))
+                .addGap(14, 14, 14)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(62, 62, 62)
+                .addComponent(AddRecord, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(223, Short.MAX_VALUE))
         );
 
         allRecordsTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -275,6 +286,14 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jLabel2.setText("Found  Damages :");
 
+        SeeBillButton.setText("BILL");
+        SeeBillButton.setToolTipText("");
+        SeeBillButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SeeBillButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout EditRecordDoneDialogLayout = new javax.swing.GroupLayout(EditRecordDoneDialog.getContentPane());
         EditRecordDoneDialog.getContentPane().setLayout(EditRecordDoneDialogLayout);
         EditRecordDoneDialogLayout.setHorizontalGroup(
@@ -290,10 +309,6 @@ public class NewJFrame extends javax.swing.JFrame {
                         .addGap(22, 22, 22)
                         .addGroup(EditRecordDoneDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(EditRecordDoneDialogLayout.createSequentialGroup()
-                                .addComponent(setAccepterBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(workAccepterBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(EditRecordDoneDialogLayout.createSequentialGroup()
                                 .addGroup(EditRecordDoneDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(RefreshButtom, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(setMakerBottom, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
@@ -303,7 +318,13 @@ public class NewJFrame extends javax.swing.JFrame {
                                     .addGroup(EditRecordDoneDialogLayout.createSequentialGroup()
                                         .addComponent(CloseRecordButtom)
                                         .addGap(117, 117, 117)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(EditRecordDoneDialogLayout.createSequentialGroup()
+                                .addComponent(setAccepterBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(workAccepterBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(SeeBillButton, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(26, Short.MAX_VALUE))
             .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING)
         );
@@ -312,12 +333,17 @@ public class NewJFrame extends javax.swing.JFrame {
             .addGroup(EditRecordDoneDialogLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(EditRecordDoneDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(setAccepterBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(workAccepterBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(EditRecordDoneDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(EditRecordDoneDialogLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(EditRecordDoneDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(setAccepterBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(workAccepterBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, EditRecordDoneDialogLayout.createSequentialGroup()
+                        .addGap(145, 145, 145)
+                        .addComponent(SeeBillButton, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(EditRecordDoneDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(EditRecordDoneDialogLayout.createSequentialGroup()
                         .addGap(14, 14, 14)
@@ -335,6 +361,50 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(53, Short.MAX_VALUE))
+        );
+
+        ExportBillButton.setText("export Bill");
+        ExportBillButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ExportBillButtonActionPerformed(evt);
+            }
+        });
+
+        ExportTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane5.setViewportView(ExportTable);
+
+        javax.swing.GroupLayout BillDialogLayout = new javax.swing.GroupLayout(BillDialog.getContentPane());
+        BillDialog.getContentPane().setLayout(BillDialogLayout);
+        BillDialogLayout.setHorizontalGroup(
+            BillDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(BillDialogLayout.createSequentialGroup()
+                .addGroup(BillDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(BillDialogLayout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(ExportBillButton, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(BillDialogLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 818, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(17, Short.MAX_VALUE))
+        );
+        BillDialogLayout.setVerticalGroup(
+            BillDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(BillDialogLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addComponent(ExportBillButton, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -361,22 +431,27 @@ public class NewJFrame extends javax.swing.JFrame {
         });
 
         jButton4.setText("exit");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 776, Short.MAX_VALUE)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(76, 76, 76))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(CreateDBBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(AddRecordButton, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(791, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(105, 105, 105))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -387,9 +462,9 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addComponent(AddRecordButton, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(45, 45, 45)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 248, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 182, Short.MAX_VALUE)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(72, 72, 72))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -502,22 +577,28 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void workMakerBottomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_workMakerBottomActionPerformed
         // TODO add your handling code here:
-        
+           int record_id  = (int) this.showSelectedRecordTable.getValueAt(0, 1);
+         
        try{
               
-             int record_id  = (int) this.showSelectedRecordTable.getValueAt(0, 1);
-         
+          
             if(this.showSelectedRecordTable.getValueAt(0, 7) == null ){
               throw new Exception("") ;
             }
 
             this.refractorSQL.SetStatusAfterMaker(record_id);
-           /// ОБЯЗАТЕЛЬНО ПРОВЕРИТЬ ЧТО НАЗНАЧЕН MAKER
+         
         
           }
         catch(Exception e)
         { JOptionPane.showMessageDialog (null, "Вы не выбрали Maker", "Oшибка", JOptionPane.ERROR_MESSAGE);
         }
+       
+       
+       this.refractorSQL.setBillAfterWork(record_id);
+       
+       
+       
     }//GEN-LAST:event_workMakerBottomActionPerformed
 
     private void setMakerBottomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setMakerBottomActionPerformed
@@ -568,7 +649,9 @@ public class NewJFrame extends javax.swing.JFrame {
     private void CloseRecordButtomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CloseRecordButtomActionPerformed
         // TODO add your handling code here:
         
-        
+        DefaultTableModel dt = new DefaultTableModel(displayer.getData(this.displayAllRecordsString), displayer.getColNames());
+            
+        this.allRecordsTable.setModel(dt );
         this.EditRecordDoneDialog.dispose();
         
         
@@ -628,6 +711,71 @@ public class NewJFrame extends javax.swing.JFrame {
         
     }//GEN-LAST:event_RefreshButtomActionPerformed
 
+    String exportSQL = "";
+    
+    
+    private void SeeBillButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SeeBillButtonActionPerformed
+        // TODO add your handling code here:
+        
+        String record_id = this.showSelectedRecordTable.getValueAt(0, 1).toString();
+        String query = "SELECT \n" +
+                "\n" +
+                "client_name, status,  accepters.accepter_name, \n" +
+                "makers.maker_name,\n" +
+                "dr.category, dr.sub_category, detail_name, detail_price\n" +
+                "\n" +
+                "FROM \n" +
+                "java.all_records ar \n" +
+                "LEFT JOIN java.clients c ON c.client_id  = ar.client_id \n" +
+                "LEFT JOIN java.damages2records dr ON dr.record_id = ar.record_id \n" +
+                "LEFT JOIN \n" +
+                "(SELECT worker_id AS accepter_id, worker_name AS accepter_name FROM java.workers ) accepters \n" +
+                "ON accepters.accepter_id  = ar.accepter_id \n" +
+                "\n" +
+                "LEFT JOIN \n" +
+                "(SELECT worker_id AS maker_id, worker_name AS maker_name FROM java.workers ) makers \n" +
+                "ON makers.maker_id  = ar.maker_id \n" +
+                "\n" +
+                "WHERE ar.record_id = ";
+        DefaultTableModel dt = new DefaultTableModel(displayer.getData(query + record_id), displayer.getColNames());
+        this.exportSQL = query;
+        this.ExportTable.setModel(dt );
+       
+        
+       
+        
+        
+        
+        
+        
+        this.BillDialog.setVisible(true);
+        
+        
+    }//GEN-LAST:event_SeeBillButtonActionPerformed
+
+    private void ExportBillButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExportBillButtonActionPerformed
+        // TODO add your handling code here:
+            String record_id = this.showSelectedRecordTable.getValueAt(0, 1).toString();
+            JFileChooser filechooser = new JFileChooser();
+            filechooser.showOpenDialog(this);
+            File selectedFile = filechooser.getSelectedFile();
+            
+           
+            System.out.println(selectedFile);
+            writer.write2File(selectedFile, record_id, this.exportSQL);
+            
+            ///reader.writeToFile(selectedFile.toString(), results, cov_results);
+         
+     
+    }//GEN-LAST:event_ExportBillButtonActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        
+       
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -667,11 +815,15 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JButton AddRecord;
     private javax.swing.JButton AddRecordButton;
     private javax.swing.JDialog AllRecordsDialog;
+    private javax.swing.JDialog BillDialog;
     private javax.swing.JButton CloseRecordButtom;
     private javax.swing.JButton CreateDBBottom;
     private javax.swing.JButton EditRecordButton;
     private javax.swing.JDialog EditRecordDoneDialog;
+    private javax.swing.JButton ExportBillButton;
+    private javax.swing.JTable ExportTable;
     private javax.swing.JButton RefreshButtom;
+    private javax.swing.JButton SeeBillButton;
     private javax.swing.JTable ShowDiagnosisResultTable;
     private javax.swing.JTable allRecordsTable;
     private javax.swing.JButton jButton3;
@@ -683,6 +835,7 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JDialog newRecordDialog;
     private javax.swing.JTable newRecordTable;
     private javax.swing.JButton setAccepterBottom;
