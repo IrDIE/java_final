@@ -44,7 +44,9 @@ public class DisplayerDB extends ConnectionRunners{
             Connection engine = DriverManager.getConnection(this.url, this.user, this.password);
             Statement stmt = engine.createStatement();
             ResultSet resultTable = stmt.executeQuery(query);
+            
             ResultSetMetaData md = resultTable.getMetaData();
+           
             int columns = md.getColumnCount();
             
             for(int i = 1; i <= columns; i++){
@@ -66,6 +68,7 @@ public class DisplayerDB extends ConnectionRunners{
             
             this.colNames =  columnNames;
             this.data =  data;
+            
             
             
             

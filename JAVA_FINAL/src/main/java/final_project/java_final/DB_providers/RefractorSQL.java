@@ -2,6 +2,8 @@ package final_project.java_final.DB_providers;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
@@ -35,6 +37,10 @@ public class RefractorSQL extends ConnectionRunners {
     
     
     public String addDamage2Record(int record_id){
+        
+        
+        GetIdSQL getterN = new GetIdSQL();
+        
           String DamageSql = " WITH damages_2_record AS (\n" +
                         "SELECT " +Integer.toString(record_id)  + " AS \"record_id\", \n" +
                         "* FROM  java.damages \n" +
@@ -47,14 +53,53 @@ public class RefractorSQL extends ConnectionRunners {
                         "ON details.detail_id = ANY(damages_2_record.details)\n" +
                         "\n" +
                         "";
+          
+          String additionalDamage = "select count(*) AS counter\n" +
+            "from java.damages2records where record_id = ";
+          
+          String additionalInputDamage = "INSERT INTO  java.damages2records \n" +
+"(\n" +
+"\n" +
+"		WITH damages_2_record AS (\n" +
+"		SELECT %s AS \"record_id\", \n" +
+"		* FROM  java.damages \n" +
+"		WHERE damages.sub_categoty = 'Замена кузовного элемента'\n" +
+"		)\n" +
+"		\n" +
+"		SELECT * \n" +
+"		FROM damages_2_record\n" +
+"		LEFT JOIN  java.details  \n" +
+"		ON details.detail_id = ANY(damages_2_record.details)\n" +
+"\n" +
+")";
         try {
           
             
             Connection engine = DriverManager.getConnection(this.url, this.user, this.password);
             Statement stmt = engine.createStatement();
-            
             stmt.execute("INSERT INTO  java.damages2records ( " + DamageSql+ ")");
-            System.out.println("INSERTED");
+            
+            
+            
+            Statement stmt_add = engine.createStatement();
+            int counted = 0;
+            
+            ResultSet resultTableAdditional = stmt_add.executeQuery(additionalDamage + Integer.toString(record_id) + "and sub_category =  'стапельные работы'");  
+            while ( resultTableAdditional.next() ) { 
+                counted = resultTableAdditional.getInt(1);
+                
+              }
+            System.out.println("counted = " + counted);
+            if(counted > 0){
+                
+          String update = String.format(additionalInputDamage, Integer.toString(record_id));
+              //  System.out.println("update = " + update);
+            stmt_add.execute(  update);
+            
+            }
+            
+            
+            
             engine.close();
         } catch (SQLException ex) {
             Logger.getLogger(RefractorSQL.class.getName()).log(Level.SEVERE, null, ex);
