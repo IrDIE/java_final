@@ -611,6 +611,7 @@ public class NewJFrame extends javax.swing.JFrame {
         
         
         int record_id  = (int) this.showSelectedRecordTable.getValueAt(0, 1);
+        System.out.println("record_id = " + record_id);
         this.refractorSQL.SetAccepter(record_id);
         
        
@@ -669,9 +670,10 @@ public class NewJFrame extends javax.swing.JFrame {
         if(this.showSelectedRecordTable.getValueAt(0, 6) == null ){
           throw new Exception("") ;
         }
-        
+            
         /// в зависимости от типа обслуживания - сервис или поломки делаем что то одно
         String typeRecord =  this.showSelectedRecordTable.getValueAt(0,4).toString();
+        System.out.println(typeRecord + "= typeRecord");
             switch (typeRecord) {
                 case "Поломки":
                     refractorSQL.addDamage2Record(record_id);
@@ -680,6 +682,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 case "Сервисное обслуживание":
                     refractorSQL.addDamageService2Record(record_id);
                     this.refractorSQL.SetStatusAfterAccepter(record_id, "done_service");
+                    this.refractorSQL.setBillAfterWork(record_id);
                     break;
                 default:
                     throw new AssertionError();
@@ -721,7 +724,7 @@ public class NewJFrame extends javax.swing.JFrame {
     private void RefreshButtomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshButtomActionPerformed
         int record_id  =  (int) this.allRecordsTable.getValueAt(this.allRecordsTable.getSelectedRow(), 0);
     
-           System.out.println("record_id = "  + record_id);
+         System.out.println("record_id from displayer = "  + record_id);
 
          DefaultTableModel dt2 = new DefaultTableModel(displayer.getData(this.StrindRecord2Edit + 
                                   Integer.toString(record_id)), displayer.getColNames());

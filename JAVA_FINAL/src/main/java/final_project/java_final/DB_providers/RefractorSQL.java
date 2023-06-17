@@ -53,7 +53,7 @@ public class RefractorSQL extends ConnectionRunners {
                         "ON details.detail_id = ANY(damages_2_record.details)\n" +
                         "\n" +
                         "";
-          
+          System.out.println(DamageSql);
           String additionalDamage = "select count(*) AS counter\n" +
             "from java.damages2records where record_id = ";
           
@@ -244,7 +244,7 @@ public class RefractorSQL extends ConnectionRunners {
                         ")", record_id);
             Connection engine = DriverManager.getConnection(this.url, this.user, this.password);
             Statement stmt = engine.createStatement();
-            
+            System.out.println(addServiceSQL);
             stmt.execute( addServiceSQL);
             engine.close();
         } catch (SQLException ex) {

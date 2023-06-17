@@ -27,7 +27,86 @@ public class CreatorSQL extends ConnectionRunners{
     
     
     public CreatorSQL(){
-      //this.SQL_DropCreate = scriptSQL_DropCreate;
+      this.SQL_DropCreate = "DROP SCHEMA IF  EXISTS java  cascade;\n" +
+"\n" +
+"DROP TABLE IF EXISTS  java.clients cascade;\n" +
+"DROP TABLE IF EXISTS  java.damages;\n" +
+"DROP TABLE IF EXISTS  java.workers;\n" +
+"DROP TABLE IF EXISTS  java.all_records ;\n" +
+"DROP TABLE IF EXISTS  java.details ;\n" +
+"DROP TABLE IF EXISTS   java.damages2records;\n" +
+"\n" +
+"CREATE SCHEMA IF NOT EXISTS java;\n" +
+"CREATE TABLE IF NOT EXISTS java.clients (\n" +
+"\n" +
+"  client_id  SERIAL  PRIMARY KEY ,\n" +
+"  client_name varchar(200),\n" +
+"  client_phone integer NOT NULL,\n" +
+"  car_number varchar(50)\n" +
+");\n" +
+"\n" +
+"\n" +
+"\n" +
+"CREATE TABLE IF NOT EXISTS java.damages (\n" +
+"\n" +
+"  damage1_id SERIAL PRIMARY KEY ,\n" +
+"  categoty varchar(200),\n" +
+"  sub_categoty varchar(200),\n" +
+"  details integer[]\n" +
+");\n" +
+"\n" +
+"\n" +
+"\n" +
+"CREATE TABLE IF NOT EXISTS java.workers (\n" +
+"\n" +
+"  worker_id  SERIAL  PRIMARY KEY ,\n" +
+"  worker_name varchar(50),\n" +
+"  category2fix varchar(200) \n" +
+");\n" +
+"\n" +
+"\n" +
+"CREATE TABLE IF NOT EXISTS java.all_records (\n" +
+"\n" +
+"  record_id  SERIAL  PRIMARY KEY ,\n" +
+"  client_id integer,\n" +
+"  status varchar(100) DEFAULT 'new' , --- 'new'  'diagnosis'  'done'\n" +
+"  description varchar(500),\n" +
+"  \n" +
+"  \n" +
+"  accepter_id integer ,\n" +
+"  client_decision boolean,\n" +
+"  maker_id integer,\n" +
+"  \n" +
+"  work_result varchar(1000), \n" +
+"  bill float DEFAULT 0.0,\n" +
+"  \n" +
+"  FOREIGN KEY(client_id) REFERENCES java.clients(client_id),\n" +
+"  FOREIGN KEY(maker_id) REFERENCES java.workers(worker_id),\n" +
+"  FOREIGN KEY(accepter_id) REFERENCES java.workers(worker_id)\n" +
+");\n" +
+"\n" +
+"\n" +
+"CREATE TABLE IF NOT EXISTS java.details (\n" +
+"\n" +
+"  detail_id  SERIAL  PRIMARY KEY ,\n" +
+"  detail_price float ,\n" +
+"  detail_name varchar(50)\n" +
+"  \n" +
+");\n" +
+"\n" +
+"CREATE TABLE IF NOT EXISTS java.damages2records (\n" +
+"\n" +
+"  record_id int   ,\n" +
+"  damage1_id int ,\n" +
+"  category varchar(200),\n" +
+"  sub_category varchar(200),\n" +
+"  details  integer[],\n" +
+"  detail_id int,\n" +
+"  detail_price float,\n" +
+"  detail_name varchar(50)\n" +
+"  \n" +
+");\n" +
+"";
         
     }
     
