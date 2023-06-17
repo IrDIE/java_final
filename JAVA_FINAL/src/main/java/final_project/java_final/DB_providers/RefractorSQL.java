@@ -41,7 +41,7 @@ public class RefractorSQL extends ConnectionRunners {
         
         GetIdSQL getterN = new GetIdSQL();
         
-          String DamageSql = " WITH damages_2_record AS (\n" +
+        String DamageSql = " WITH damages_2_record AS (\n" +
                         "SELECT " +Integer.toString(record_id)  + " AS \"record_id\", \n" +
                         "* FROM  java.damages \n" +
                         "WHERE category  = (SELECT category  FROM java.damages d  ORDER BY random() LIMIT 1 )\n" +
@@ -164,12 +164,12 @@ public class RefractorSQL extends ConnectionRunners {
     
     
     
-    public void SetStatusAfterAccepter(int id_2_refractor){
+    public void SetStatusAfterAccepter(int id_2_refractor, String status){
     
         try {
-            String SQL_update = "UPDATE java.all_records \n" +
-                        "SET status  = 'diagnosis'\n" +
-                        "WHERE record_id = ";
+            String SQL_update = String.format( "UPDATE java.all_records \n" +
+                        "SET status  = '%s'\n" +
+                        "WHERE record_id = ", status);
          
             Connection engine = DriverManager.getConnection(this.url, this.user, this.password);
             Statement stmt = engine.createStatement();
@@ -209,7 +209,7 @@ public class RefractorSQL extends ConnectionRunners {
             String update = String.format( "UPDATE java.all_records \n" +
                         "SET bill  = (SELECT sum(detail_price) FROM java.damages2records dr \n" +
                         "WHERE record_id = %d ) WHERE record_id = %d",id_2_refractor, id_2_refractor );
-            System.out.println(update);
+            
             
             Connection engine = DriverManager.getConnection(this.url, this.user, this.password);
             Statement stmt = engine.createStatement();
@@ -217,17 +217,44 @@ public class RefractorSQL extends ConnectionRunners {
             stmt.execute( update);
             engine.close();
             
-            
-//       String SQL_update = "";
-//            Connection engine = DriverManager.getConnection(this.url, this.user, this.password);
-//            Statement stmt = engine.createStatement();
-//            
-//            stmt.execute(  SQL_update+ Integer.toString(id_2_refractor));
-//            engine.close();  
+  
         } catch (SQLException ex) {
             Logger.getLogger(RefractorSQL.class.getName()).log(Level.SEVERE, null, ex);
         }
     
     }
+
+    public void addDamageService2Record(int record_id) {
+        
+        try {
+            String addServiceSQL = String.format("INSERT INTO  java.damages2records \n" +
+                        "(\n" +
+                        "		WITH damages_2_record AS (\n" +
+                        "		SELECT %d AS \"record_id\", \n" +
+                        "				* FROM  java.damages \n" +
+                        "				WHERE category  = 'Сервисное обслуживание'\n" +
+                        "				ORDER BY random()\n" +
+                        "				limit 1\n" +
+                        "				)\n" +
+                        "				\n" +
+                        "		SELECT * \n" +
+                        "		FROM damages_2_record\n" +
+                        "		LEFT JOIN  java.details  \n" +
+                        "		ON details.detail_id = ANY(damages_2_record.details)\n" +
+                        ")", record_id);
+            Connection engine = DriverManager.getConnection(this.url, this.user, this.password);
+            Statement stmt = engine.createStatement();
+            
+            stmt.execute( addServiceSQL);
+            engine.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RefractorSQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+    
+    }
+    
+    
+    
     
 }
