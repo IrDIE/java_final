@@ -16,10 +16,15 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javax.management.Query.value;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -58,6 +63,13 @@ public class NewJFrame extends javax.swing.JFrame {
             this.AllRecordsDialog.setSize(800, 500);
             this.EditRecordDoneDialog.setSize(1000, 800);
             this.BillDialog.setSize(900, 800);
+            TableColumn newRecord_model = this.newRecordTable.getColumnModel().getColumn(3);
+            
+            JComboBox comboBox = new JComboBox();
+            comboBox.addItem("Сервисное обслуживание");
+            comboBox.addItem("Поломки");
+
+            newRecord_model.setCellEditor(new DefaultCellEditor(comboBox));
             
 //            this.setAccepterBottom.setVisible(false);
 //            this.workAccepterBottom.setVisible(false);
@@ -86,6 +98,7 @@ public class NewJFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         newRecordTable = new javax.swing.JTable();
         AddRecord = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
         AllRecordsDialog = new javax.swing.JDialog();
         jScrollPane2 = new javax.swing.JScrollPane();
         allRecordsTable = new javax.swing.JTable();
@@ -146,18 +159,20 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setText("damage Description : \"damage\" or \"service\"");
+
         javax.swing.GroupLayout newRecordDialogLayout = new javax.swing.GroupLayout(newRecordDialog.getContentPane());
         newRecordDialog.getContentPane().setLayout(newRecordDialogLayout);
         newRecordDialogLayout.setHorizontalGroup(
             newRecordDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(newRecordDialogLayout.createSequentialGroup()
-                .addGroup(newRecordDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(16, 16, 16)
+                .addGroup(newRecordDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(newRecordDialogLayout.createSequentialGroup()
-                        .addGap(81, 81, 81)
-                        .addComponent(AddRecord, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(newRecordDialogLayout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 657, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(AddRecord, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(97, 97, 97)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 657, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(86, Short.MAX_VALUE))
         );
         newRecordDialogLayout.setVerticalGroup(
@@ -165,8 +180,13 @@ public class NewJFrame extends javax.swing.JFrame {
             .addGroup(newRecordDialogLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(62, 62, 62)
-                .addComponent(AddRecord, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(newRecordDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(newRecordDialogLayout.createSequentialGroup()
+                        .addGap(62, 62, 62)
+                        .addComponent(AddRecord, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(newRecordDialogLayout.createSequentialGroup()
+                        .addGap(43, 43, 43)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(223, Short.MAX_VALUE))
         );
 
@@ -535,25 +555,7 @@ public class NewJFrame extends javax.swing.JFrame {
         // получаем статус этой заявки
         String status = this.showSelectedRecordTable.getValueAt(0, 5).toString();
         System.out.println("status = " + status);
-        switch (status) {
-            case "new":
-                this.setAccepterBottom.setVisible(true);
-            this.workAccepterBottom.setVisible(true);
-                break;
-                
-            case "diagnosis":
-                this.setMakerBottom.setVisible(true);
-            this.workMakerBottom.setVisible(true);
-                
-                break;
-            case "done":
-                  this.CloseRecordButtom.setVisible(true);
-                break;
-            default:
-                throw new AssertionError();
-        }
-        
-            
+  
             this.EditRecordDoneDialog.setVisible(true);
             this.showSelectedRecordTable.setVisible(true);
             
@@ -830,6 +832,7 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

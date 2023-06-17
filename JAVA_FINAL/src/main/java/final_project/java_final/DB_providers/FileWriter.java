@@ -33,10 +33,6 @@ public class FileWriter  extends ConnectionRunners{
             Statement st = engine.createStatement();
             
         
-                // dr., dr., , 
-            
-            
-            
             ResultSet res = st.executeQuery(SQLQuery);
             System.out.println("Employee Name: " );
             File f=new File("output.txt");

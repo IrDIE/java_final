@@ -188,7 +188,7 @@ public class RefractorSQL extends ConnectionRunners {
         
         try {
             String SQL_update = "UPDATE java.all_records \n" +
-                        "SET status  ='done'\n" +
+                        "SET status  ='done_damages'\n" +
                         "WHERE record_id = ";
             Connection engine = DriverManager.getConnection(this.url, this.user, this.password);
             Statement stmt = engine.createStatement();
