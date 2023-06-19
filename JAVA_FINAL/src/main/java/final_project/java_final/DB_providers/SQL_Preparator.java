@@ -24,12 +24,12 @@ public class SQL_Preparator {
 
 
     public PreparedStatement query_prepared = null;
-    String type_connect = ""; // insert or refractor
+    //String type_connect = ""; // insert or refractor
     JTable sourse;
     String targetTable;
-    public SQL_Preparator(String type_connect, String targetTable, JTable sourse){
+    public SQL_Preparator( String targetTable, JTable sourse){
         this.targetTable = targetTable;
-        this.type_connect = type_connect;
+       // this.type_connect = type_connect;
         this.sourse= sourse;
 
     }

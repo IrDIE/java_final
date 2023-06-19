@@ -61,7 +61,7 @@ public class RefractorSQL extends ConnectionRunners {
 "(\n" +
 "\n" +
 "		WITH damages_2_record AS (\n" +
-"		SELECT %s AS \"record_id\", \n" +
+"		SELECT %d AS \"record_id\", \n" +
 "		* FROM  java.damages \n" +
 "		WHERE damages.sub_categoty = 'Замена кузовного элемента'\n" +
 "		)\n" +
@@ -92,7 +92,7 @@ public class RefractorSQL extends ConnectionRunners {
             System.out.println("counted = " + counted);
             if(counted > 0){
                 
-          String update = String.format(additionalInputDamage, Integer.toString(record_id));
+          String update = String.format(additionalInputDamage, record_id);
               //  System.out.println("update = " + update);
             stmt_add.execute(  update);
             

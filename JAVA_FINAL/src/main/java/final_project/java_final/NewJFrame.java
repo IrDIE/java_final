@@ -26,6 +26,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -696,8 +697,7 @@ public class NewJFrame extends javax.swing.JFrame {
         
         this.ShowDiagnosisResultTable.setVisible(true);
         
-        
-        
+
         }
         
         catch(Exception e)
@@ -714,8 +714,15 @@ public class NewJFrame extends javax.swing.JFrame {
             
         this.allRecordsTable.setModel(dt );
         this.EditRecordDoneDialog.dispose();
-        
-        
+          this.setAccepterBottom.setVisible(false);
+            this.workAccepterBottom.setVisible(false);
+            
+            this.setMakerBottom.setVisible(false);
+            this.workMakerBottom.setVisible(false);
+            
+            
+            this.RefreshButtom.setVisible(true);
+            this.CloseRecordButtom.setVisible(false);
         
         
         
@@ -774,11 +781,6 @@ public class NewJFrame extends javax.swing.JFrame {
         this.ExportTable.setModel(dt );
        
         
-       
-        
-        
-        
-        
         
         this.BillDialog.setVisible(true);
         
@@ -792,10 +794,30 @@ public class NewJFrame extends javax.swing.JFrame {
             filechooser.showOpenDialog(this);
             File selectedFile = filechooser.getSelectedFile();
             
-           
-            System.out.println(selectedFile);
-            writer.write2File(selectedFile, record_id, this.exportSQL);
             
+            
+         try{
+                
+            String ext1 = FilenameUtils.getExtension(selectedFile.toString());
+             System.out.println(ext1 + " = ext1");
+            if( !ext1.equals("txt")){
+                System.out.println("thr exceptoin");
+                    throw new Exception("") ;
+                    
+            }
+            //System.out.println(selectedFile);
+            writer.write2File(selectedFile, record_id, this.exportSQL);
+             JOptionPane.showMessageDialog (null, "Файл слхранён - "+ selectedFile, "Сохранение файла", JOptionPane.INFORMATION_MESSAGE );
+        }
+         
+         
+        
+        catch(Exception e)
+        {
+            JOptionPane.showMessageDialog (null, "Неверное расширение файла", "Oшибка", JOptionPane.ERROR_MESSAGE);
+        }
+            
+         
             ///reader.writeToFile(selectedFile.toString(), results, cov_results);
          
      

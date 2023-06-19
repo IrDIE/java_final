@@ -58,7 +58,7 @@ public class InserterSQL extends ConnectionRunners {
             // different realisation depends on Creator or Inserter are running
             Connection engine = DriverManager.getConnection(this.url, this.user, this.password);
             
-            preparator = new SQL_Preparator("insert", targetTable, this.sourse);
+            preparator = new SQL_Preparator(targetTable, this.sourse);
             PreparedStatement query_prepared = this.preparator.getPreparedSQL_insert(this.target_SQL_insert, engine ); /// GET PREPARED ROWS
             query_prepared.executeBatch();
             

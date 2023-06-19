@@ -5,29 +5,11 @@
 
 package final_project.java_final;
 
-import final_project.java_final.DB_providers.DisplayerDB;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-/**
- *
- * @author 79509
- */
+
 public class JAVA_FINAL {
 
     public static void main(String[] args) {
-        try {
-            System.out.println("Hello World!");
-            
-            DisplayerDB dd = new DisplayerDB();
-            ArrayList res =  new ArrayList( dd.getData("select client_id from java.clients where client_name = 'david ' "));
-            // System.out.println( "res = "+ res.get(""));
-        } catch (SQLException ex) {
-            Logger.getLogger(JAVA_FINAL.class.getName()).log(Level.SEVERE, null, ex);
-        }
+     
     }
 }
